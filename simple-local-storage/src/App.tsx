@@ -1,4 +1,11 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import "./App.css";
 import { ChangeEvent, useEffect, useState } from "react";
 function App() {
@@ -23,7 +30,7 @@ function App() {
     }
     const updatedList = [...nameList, name];
     setNameList(updatedList);
-    localStorage.setItem("name", JSON.stringify(updatedList));
+    localStorage.setItem("nameList", JSON.stringify(updatedList));
     setName("");
   };
 
@@ -38,54 +45,85 @@ function App() {
     setNameList([]);
   };
   return (
-    <Stack
-      spacing={2}
+    <Box
       sx={{
-        width: "100%",
+        width: "100vw",
         height: "100vh",
-        alignItems: "center",
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
       }}
     >
-      <Stack spacing={2} direction={"row"}>
-        <TextField
-          id="outlined-basic"
-          label="name"
-          variant="outlined"
-          name="name"
-          value={name}
-          onChange={handleChange}
-        />
-        <Button variant="contained" onClick={handleSave}>
-          Save To Local Storage
-        </Button>
-      </Stack>
+      <Paper
+        elevation={4}
+        sx={{
+          padding: 4,
+          borderRadius: 2,
+          width: "400px",
+          maxWidth: "90%",
+        }}
+      >
+        <Stack spacing={2}>
+          <Stack spacing={2} direction={"row"}>
+            <TextField
+              id="outlined-basic"
+              label="name"
+              variant="outlined"
+              name="name"
+              value={name}
+              onChange={handleChange}
+              fullWidth
+            />
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+          </Stack>
 
-      <Stack spacing={2} direction={"column"}>
-        <Typography variant="h6">Saved Names:</Typography>
-        {nameList.length === 0 ? (
-          <Typography>No names saved yet.</Typography>
-        ) : (
-          nameList.map((nameItem, index) => (
-            <Stack key={index} direction={"row"} spacing={2}>
-              <Typography>{nameItem}</Typography>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => handleRemove(nameItem)}
+          <Stack spacing={2} direction={"column"}>
+            <Typography variant="h6">Saved Names:</Typography>
+            {nameList.length === 0 ? (
+              <Box
+                sx={{
+                  backgroundColor: "#d2faf8",
+                  p: 2,
+                  borderRadius: 1,
+                  textAlign: "center",
+                }}
               >
-                Remove
-              </Button>
-            </Stack>
-          ))
-        )}
-        <Button variant="contained" color="error" onClick={handleClear}>
-          Clear All Names
-        </Button>
-      </Stack>
-    </Stack>
+                <Typography>No names saved yet.</Typography>
+              </Box>
+            ) : (
+              nameList.map((nameItem, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    alignItems: "center",
+                    gap: 2,
+                    padding: 1,
+                    borderBottom: "1px solid #ccc",
+                  }}
+                >
+                  <Typography>{nameItem}</Typography>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleRemove(nameItem)}
+                  >
+                    Remove
+                  </Button>
+                </Box>
+              ))
+            )}
+            <Button variant="contained" color="error" onClick={handleClear}>
+              Clear All
+            </Button>
+          </Stack>
+        </Stack>
+      </Paper>
+    </Box>
   );
 }
 
