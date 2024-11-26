@@ -3,7 +3,6 @@ import "./App.css";
 import { ChangeEvent, useEffect, useState } from "react";
 function App() {
   const [name, setName] = useState<string>("");
-  const [storedName, setStoredName] = useState<string | null>("");
   const [nameList, setNameList] = useState<string[]>([]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -11,25 +10,32 @@ function App() {
   };
 
   useEffect(() => {
-    const savedName: string | null = localStorage.getItem("name");
-    if (savedName) {
-      setStoredName(savedName);
+    const savedList = localStorage.getItem("nameList");
+    if (savedList) {
+      setNameList(JSON.parse(savedList));
     }
   }, []);
 
   const handleSave = (): void => {
-    localStorage.setItem("name", name);
-    setStoredName(name);
+    if (!name.trim()) {
+      alert("Please insert a name!");
+      return;
+    }
+    const updatedList = [...nameList, name];
+    setNameList(updatedList);
+    localStorage.setItem("name", JSON.stringify(updatedList));
+    setName("");
   };
 
-  const handleRemove = (): void => {
-    localStorage.removeItem("name");
-    setStoredName(null);
+  const handleRemove = (nameToRemove: string): void => {
+    const updatedList = nameList.filter((item) => item !== nameToRemove);
+    setNameList(updatedList);
+    localStorage.setItem("nameList", JSON.stringify(updatedList));
   };
 
   const handleClear = (): void => {
     localStorage.clear();
-    setStoredName(null);
+    setNameList([]);
   };
   return (
     <Stack
@@ -49,23 +55,36 @@ function App() {
           label="name"
           variant="outlined"
           name="name"
+          value={name}
           onChange={handleChange}
         />
         <Button variant="contained" onClick={handleSave}>
           Save To Local Storage
         </Button>
       </Stack>
-      {storedName && (
-        <Stack spacing={2} direction={"row"}>
-          <Typography>Name:{storedName} </Typography>
-          <Button variant="contained" onClick={handleRemove}>
-            Remove Item from local storage
-          </Button>
-          <Button variant="contained" onClick={handleClear}>
-            Clear Local Storage
-          </Button>
-        </Stack>
-      )}
+
+      <Stack spacing={2} direction={"column"}>
+        <Typography variant="h6">Saved Names:</Typography>
+        {nameList.length === 0 ? (
+          <Typography>No names saved yet.</Typography>
+        ) : (
+          nameList.map((nameItem, index) => (
+            <Stack key={index} direction={"row"} spacing={2}>
+              <Typography>{nameItem}</Typography>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => handleRemove(nameItem)}
+              >
+                Remove
+              </Button>
+            </Stack>
+          ))
+        )}
+        <Button variant="contained" color="error" onClick={handleClear}>
+          Clear All Names
+        </Button>
+      </Stack>
     </Stack>
   );
 }
