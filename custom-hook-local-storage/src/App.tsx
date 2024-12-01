@@ -32,16 +32,16 @@ function App() {
       alert("Please fill in all fields");
       return;
     }
-    setFormData((prev) => [...prev, formInput]); // Add new entry to array
-    setFormInput({ name: "", email: "" }); // Reset form input
+    setFormData((prev) => [...prev, formInput]);
+    setFormInput({ name: "", email: "" });
   };
 
   const handleRemove = (index: number) => {
-    setFormData((prev) => prev.filter((_, i) => i !== index)); // Remove specific entry
+    setFormData((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleClear = () => {
-    setFormData([]); // Clear all entries
+    setFormData([]);
   };
 
   return (
