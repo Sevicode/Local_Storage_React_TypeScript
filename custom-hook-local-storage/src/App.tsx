@@ -1,15 +1,25 @@
-import React, { ChangeEvent, useState } from "react";
-import "./App.css";
+import React, { useState } from "react";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { FormData } from "./interface/Interface";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 function App() {
+  // UseLocalStorage hook initialization with proper default value
   const [formData, setFormData] = useLocalStorage<FormData[]>("formData", []);
-  const [formInput, setFormInput] = React.useState<FormData>({
+  const [formInput, setFormInput] = useState<FormData>({
     name: "",
     email: "",
   });
+
+  // Reset formData if corrupted data is found
+  React.useEffect(() => {
+    if (!Array.isArray(formData)) {
+      console.warn(
+        "Invalid formData found in localStorage. Resetting to default."
+      );
+      setFormData([]);
+    }
+  }, [formData, setFormData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,17 +28,20 @@ function App() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormData((prev) => [...prev, formInput]);
-    setFormInput({ name: "", email: "" });
+    if (!formInput.name || !formInput.email) {
+      alert("Please fill in all fields");
+      return;
+    }
+    setFormData((prev) => [...prev, formInput]); // Add new entry to array
+    setFormInput({ name: "", email: "" }); // Reset form input
   };
 
   const handleRemove = (index: number) => {
-    setFormData((prev) => prev.filter((_, i) => i !== index));
+    setFormData((prev) => prev.filter((_, i) => i !== index)); // Remove specific entry
   };
 
   const handleClear = () => {
-    localStorage.clear();
-    setFormData([]);
+    setFormData([]); // Clear all entries
   };
 
   return (
@@ -39,8 +52,10 @@ function App() {
         width: "100vw",
         height: "100vh",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        gap: 2,
       }}
     >
       <Paper
@@ -74,18 +89,20 @@ function App() {
       </Paper>
 
       <Box sx={{ mt: 4, width: "100%" }}>
-        {formData.length === 0 ? (
-          <Box
+        {Array.isArray(formData) && formData.length === 0 ? (
+          <Typography
+            textAlign="center"
             sx={{
-              backgroundColor: "#d2faf8",
+              backgroundColor: "#f9f9f9",
               p: 2,
               borderRadius: 1,
-              textAlign: "center",
+              color: "#555",
             }}
           >
-            <Typography>No names saved yet.</Typography>
-          </Box>
+            No data available. Please add some entries.
+          </Typography>
         ) : (
+          Array.isArray(formData) &&
           formData.map((entry, index) => (
             <Box
               key={index}
@@ -93,17 +110,18 @@ function App() {
                 p: 2,
                 borderBottom: "1px solid #ccc",
                 display: "flex",
-                flexDirection: "column",
-                gap: 1,
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Typography>Name: {entry.name}</Typography>
-              <Typography>Email: {entry.email}</Typography>
+              <Box>
+                <Typography>Name: {entry.name}</Typography>
+                <Typography>Email: {entry.email}</Typography>
+              </Box>
               <Button
                 onClick={() => handleRemove(index)}
                 variant="outlined"
                 color="error"
-                sx={{ mt: 1 }}
               >
                 Remove
               </Button>
@@ -111,6 +129,7 @@ function App() {
           ))
         )}
       </Box>
+
       <Button
         onClick={handleClear}
         variant="outlined"
