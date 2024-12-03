@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { FormData } from "./interface/Interface";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 function App() {
-  // UseLocalStorage hook initialization with proper default value
   const [formData, setFormData] = useLocalStorage<FormData[]>("formData", []);
   const [formInput, setFormInput] = useState<FormData>({
     name: "",
     email: "",
   });
 
-  // Reset formData if corrupted data is found
-  React.useEffect(() => {
-    if (!Array.isArray(formData)) {
+  useEffect(() => {
+    if (!Array(formData)) {
       console.warn(
         "Invalid formData found in localStorage. Resetting to default."
       );
@@ -108,9 +106,10 @@ function App() {
               key={index}
               sx={{
                 p: 2,
+                margin: "auto",
                 borderBottom: "1px solid #ccc",
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "space-around",
                 alignItems: "center",
               }}
             >
