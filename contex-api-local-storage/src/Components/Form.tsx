@@ -10,7 +10,7 @@ import { useList } from "../Hooks/useList";
 import { ListItem } from "../Interface/interface";
 import { useState } from "react";
 
-function Form() {
+export function Form() {
   const { addItem } = useList();
   const [formData, setFormData] = useState<ListItem>({
     name: "",

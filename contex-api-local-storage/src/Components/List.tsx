@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import { useList } from "../Hooks/useList";
 
-function List() {
+export function List() {
   const { list, removeItem, clearList } = useList();
 
   return (
