@@ -9,7 +9,7 @@ function App() {
     <ListProvider>
       <Box sx={{ maxWidth: 600, margin: "auto", marginTop: 4 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          User Management App
+          Form
         </Typography>
         <Form />
         <List />

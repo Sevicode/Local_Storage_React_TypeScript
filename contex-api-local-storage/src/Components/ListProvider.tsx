@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ListItem, ListProviderProps } from "../Interface/interface";
-import { ListContext } from "./ListContext";
+import { ListContext } from "../Context/ListContext";
 
 export function ListProvider({ children }: ListProviderProps) {
   const [list, setList] = useState<ListItem[]>(() => {
