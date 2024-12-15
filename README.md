@@ -2,7 +2,7 @@
 
 ![](./m.png)
 
-This respository consists of 3 other sub-repositories which each belongs to one article published on Medium.
+This respository consists of 3 other sub-repositories which each belongs to one article published on [Medium](https://medium.com/@SevdaSevinu).
 
 1- [Use localStorage API in React- TypeScript to persist data: A beginner’s guide](https://medium.com/javascript-in-plain-english/4-ways-to-use-localstorage-in-react-typescript-part-1-4671460ac2b2)
 
